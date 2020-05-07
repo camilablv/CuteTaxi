@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="ua.com.cuteteam.cutetaxiproject">
+    package="ua.com.cuteteam.cutetaxi">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
-        android:name=".application.AppClass"
+        android:name="ua.com.cuteteam.cutetaxi.application.AppClass"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -18,14 +18,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activities.AuthActivity" />
+        <activity android:name="ua.com.cuteteam.cutetaxi.activities.AuthActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".activities.MainActivity"
+            android:name="ua.com.cuteteam.cutetaxi.activities.MainActivity"
             android:theme="@style/HeadPieceTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,20 +34,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.BaseActivity"
+            android:name="ua.com.cuteteam.cutetaxi.activities.BaseActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.PassengerActivity"
+            android:name="ua.com.cuteteam.cutetaxi.activities.PassengerActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.DriverActivity"
+            android:name="ua.com.cuteteam.cutetaxi.activities.DriverActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service
-            android:name=".services.DriverService"
+            android:name="ua.com.cuteteam.cutetaxi.services.DriverService"
             android:exported="false" />
         <service
-            android:name=".services.PassengerService"
+            android:name="ua.com.cuteteam.cutetaxi.services.PassengerService"
             android:exported="false" />
     </application>
 

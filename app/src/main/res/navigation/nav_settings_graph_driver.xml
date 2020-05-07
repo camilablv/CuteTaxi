@@ -6,14 +6,14 @@
 
     <fragment
         android:id="@+id/mainInfoFragment"
-        android:name="ua.com.cuteteam.cutetaxiproject.fragments.settings.MainInfoFragment"
+        android:name="ua.com.cuteteam.cutetaxi.fragments.settings.MainInfoFragment"
         android:label="MainInfoFragment" />
     <fragment
         android:id="@+id/driverInfoFragment"
-        android:name="ua.com.cuteteam.cutetaxiproject.fragments.settings.DriverInfoFragment"
+        android:name="ua.com.cuteteam.cutetaxi.fragments.settings.DriverInfoFragment"
         android:label="DriverInfoFragment" />
     <fragment
         android:id="@+id/systemFragment"
-        android:name="ua.com.cuteteam.cutetaxiproject.fragments.settings.SystemFragment"
+        android:name="ua.com.cuteteam.cutetaxi.fragments.settings.SystemFragment"
         android:label="SystemFragment" />
 </navigation>
