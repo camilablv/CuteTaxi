@@ -15,7 +15,7 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
-        applicationId "ua.com.cuteteam.cutetaxiproject"
+        applicationId "ua.com.cuteteam.cutetaxi"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
@@ -26,7 +26,7 @@ android {
         buildConfigField "String", "GOOGLE_DIRECTIONS_API_URL", '"https://maps.googleapis.com/maps/api/directions/"'
         buildConfigField "String", "GOOGLE_AUTOCOMPLETE_API_URL", '"https://maps.googleapis.com/maps/api/place/autocomplete/"'
         buildConfigField "String", "GOOGLE_ROADS_API_URL", '"https://roads.googleapis.com/v1/"'
-        buildConfigField "String", "GOOGLE_KEY", '"AIzaSyDUTwknPHCe9ztenzmKiBNi2cEoFMN3Nnw"'
+        buildConfigField "String", "GOOGLE_KEY", '"AIzaSyBc2ptlHtmutwuNijbIwMzynDEWviZg3eY"'
 
     }
     buildTypes {
