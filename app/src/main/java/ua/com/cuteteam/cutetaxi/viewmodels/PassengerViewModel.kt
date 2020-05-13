@@ -99,6 +99,7 @@ class PassengerViewModel(private val repository: PassengerRepository) : BaseView
     private suspend fun getAddressByLatLng(location: LatLng): Address {
         return repository.geocoder.build().requestNameByCoordinates(location)
             .toAddress()
+        //return Address(Coordinates(0.0), "")
     }
 
     fun fetchAddresses(value: String) = viewModelScope.launch {
