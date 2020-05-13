@@ -6,7 +6,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/map_container"
-        android:name="ua.com.cuteteam.cutetaxiproject.fragments.PassengerMapsFragment"
+        android:name="com.google.android.gms.maps.supportmapfragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:tag="PassengerMapFragment" />
@@ -24,3 +24,4 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </FrameLayout>
+    <!--        android:name="ua.com.cuteteam.cutetaxiproject.fragments.PassengerMapsFragment"-->

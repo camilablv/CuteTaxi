@@ -15,7 +15,7 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
-        applicationId "ua.com.cuteteam.cutetaxiproject"
+        applicationId "ua.com.cuteteam.cutetaxi"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
@@ -26,7 +26,7 @@ android {
         buildConfigField "String", "GOOGLE_DIRECTIONS_API_URL", '"https://maps.googleapis.com/maps/api/directions/"'
         buildConfigField "String", "GOOGLE_AUTOCOMPLETE_API_URL", '"https://maps.googleapis.com/maps/api/place/autocomplete/"'
         buildConfigField "String", "GOOGLE_ROADS_API_URL", '"https://roads.googleapis.com/v1/"'
-        buildConfigField "String", "GOOGLE_KEY", '"AIzaSyDUTwknPHCe9ztenzmKiBNi2cEoFMN3Nnw"'
+        buildConfigField "String", "GOOGLE_KEY", '"AIzaSyBc2ptlHtmutwuNijbIwMzynDEWviZg3eY"'
 
     }
     buildTypes {
@@ -73,11 +73,9 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
 
     //material
-
     implementation 'com.google.android.material:material:1.1.0'
 
     //Firebase
-
     implementation 'com.google.firebase:firebase-analytics:17.3.0'
     implementation 'com.google.firebase:firebase-auth:19.3.0'
     implementation 'com.google.firebase:firebase-database-ktx:19.2.1'
@@ -117,7 +115,7 @@ dependencies {
     debugImplementation "com.github.ChuckerTeam.Chucker:library:3.0.1"
     releaseImplementation "com.github.ChuckerTeam.Chucker:library-no-op:3.0.1"
 
-        //Dagger
+    //Dagger
     implementation 'com.google.dagger:dagger:2.27'
     kapt 'com.google.dagger:dagger-compiler:2.27'
     implementation 'com.google.dagger:dagger-android:2.27'
