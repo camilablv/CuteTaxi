@@ -86,3 +86,4 @@ lint/tmp/
 # lint/reports/
 /app/app.iml
 CuteTaxi/local.properties
+api_keys.xml
