@@ -7,7 +7,7 @@ android {
     buildToolsVersion "29.0.2"
 
     defaultConfig {
-        applicationId "com.yuriy.driverclient"
+        applicationId "ua.com.cuteteam.driverclient"
         minSdkVersion 22
         targetSdkVersion 29
         versionCode 1
