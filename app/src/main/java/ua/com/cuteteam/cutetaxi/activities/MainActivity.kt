@@ -5,16 +5,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import ua.com.cuteteam.cutetaxi.R
-import ua.com.cuteteam.cutetaxi.fragments.HeadPieceFragment
+import ua.com.cuteteam.cutetaxi.fragments.PassengerMapsFragment
 import ua.com.cuteteam.cutetaxi.viewmodels.AuthViewModel
 import ua.com.cuteteam.cutetaxi.viewmodels.StartUpViewModel
 import ua.com.cuteteam.cutetaxi.viewmodels.viewmodelsfactories.AuthViewModelFactory
 import ua.com.cuteteam.cutetaxi.viewmodels.viewmodelsfactories.StartUpViewModelFactory
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,10 +29,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.head_piece_fl, HeadPieceFragment())
+//            .replace(R.id.head_piece_fl, HeadPieceFragment())
+            .replace(R.id.head_piece_fl, PassengerMapsFragment())
             .commit()
 
-        Timer().schedule(object : TimerTask() {
+        /*Timer().schedule(object : TimerTask() {
             override fun run() {
                 GlobalScope.launch(Dispatchers.Main) {
                     if (authViewModel.verifyCurrentUser()) {
@@ -45,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                     else startAuthorization()
                 }
             }
-        }, 350)
+        }, 350)*/
     }
 
     private fun startAuthorization() {

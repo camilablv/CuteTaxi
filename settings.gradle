@@ -1,2 +1,5 @@
 include ':app'
 rootProject.name='CuteTaxi'
+include ':driverclient'
+include ':passengerclient'
+include ':core'
