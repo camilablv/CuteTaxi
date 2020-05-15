@@ -47,7 +47,7 @@ class VerificationCodeFragment : Fragment(), View.OnClickListener {
         authViewModel.state.observe(viewLifecycleOwner, Observer {
             when(it) {
                 AuthViewModel.State.TIME_OUT -> resend_code_btn.isEnabled = true
-                AuthViewModel.State.INVALID_CODE -> sms_code_et.error = getString(R.string.invalid_code_number_error)
+                AuthViewModel.State.INVALID_CODE -> sms_code_et.error = /*getString(R.string.invalid_code_number_error)*/""
                 else -> {}
             }
         })

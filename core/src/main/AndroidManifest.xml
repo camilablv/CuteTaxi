@@ -3,7 +3,8 @@
     package="ua.com.cuteteam.core">
 
     <application>
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".activities.StartActivity"></activity>
+        <activity android:name=".activities.AuthActivity"></activity>
     </application>
 
 </manifest>

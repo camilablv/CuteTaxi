@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.FirebaseApp
 import ua.com.cuteteam.core.R
 import ua.com.cuteteam.core.fragments.PhoneNumberFragment
 import ua.com.cuteteam.core.fragments.VerificationCodeFragment
@@ -55,7 +56,7 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun returnToStartUpActivity() {
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, StartActivity::class.java)
         startActivity(intent)
         finish()
     }
