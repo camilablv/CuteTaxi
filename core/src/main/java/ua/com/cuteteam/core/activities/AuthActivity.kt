@@ -2,6 +2,7 @@ package ua.com.cuteteam.core.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -49,6 +50,11 @@ class AuthActivity : AppCompatActivity() {
                     .commit()
                 AuthViewModel.State.LOGGED_IN -> returnToStartUpActivity()
                 AuthViewModel.State.RESEND_CODE -> authViewModel.resendVerificationCode()
+                AuthViewModel.State.SERVICE_UNAVAILABLE -> Toast.makeText(
+                    this,
+                    "To many requests",
+                    Toast.LENGTH_SHORT
+                ).show()
                 else -> {
                 }
             }
