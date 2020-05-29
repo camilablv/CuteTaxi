@@ -9,8 +9,12 @@ import ua.com.cuteteam.core.providers.AuthProvider.Companion.ERROR_INVALID_PHONE
 import ua.com.cuteteam.core.providers.AuthProvider.Companion.ERROR_INVALID_VERIFICATION_CODE
 import ua.com.cuteteam.core.providers.AuthProvider.Companion.ERROR_SERVICE_UNAVAILABLE
 
-class AuthViewModel: ViewModel(),
+class AuthViewModel(private val authProvider: AuthProvider): ViewModel(),
     AuthListener {
+
+    init {
+        authProvider.apply { authListener = this@AuthViewModel }
+    }
 
     enum class State {
         ENTERING_PHONE_NUMBER,
@@ -24,9 +28,6 @@ class AuthViewModel: ViewModel(),
     }
 
     var state = MutableLiveData(State.ENTERING_PHONE_NUMBER)
-
-    private val authProvider = AuthProvider()
-        .apply { authListener = this@AuthViewModel }
 
     private var _firebaseUser: FirebaseUser? = null
     val firebaseUser get() = authProvider.user ?: _firebaseUser

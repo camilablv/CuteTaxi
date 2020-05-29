@@ -17,7 +17,9 @@ interface AuthListener {
     fun onTimeOut()
 }
 
-class AuthProvider {
+class AuthProvider(
+    private val phoneAuthProvider: PhoneAuthProvider,
+    private val firebaseAuth: FirebaseAuth) {
 
     companion object {
         const val ERROR_INVALID_PHONE_NUMBER = "ERROR_INVALID_PHONE_NUMBER"
@@ -25,12 +27,9 @@ class AuthProvider {
         const val ERROR_SERVICE_UNAVAILABLE = "ERROR_SERVICE_UNAVAILABLE"
     }
 
-    private val phoneAuthProvider = PhoneAuthProvider.getInstance()
-    private val auth = FirebaseAuth.getInstance()
     private lateinit var verificationId: String
     private lateinit var resendingToken: PhoneAuthProvider.ForceResendingToken
     var authListener: AuthListener? = null
-    private val firebaseAuth = FirebaseAuth.getInstance()
 
     val user get() = firebaseAuth.currentUser
 
@@ -58,8 +57,6 @@ class AuthProvider {
             }
         }
 
-    fun isUserSignedIn() = firebaseAuth.currentUser != null
-
     suspend fun verifyCurrentUser(): Boolean {
         return suspendCoroutine {
             firebaseAuth.currentUser?.reload()
@@ -68,7 +65,7 @@ class AuthProvider {
         }
     }
 
-    fun signOutUser() = auth.signOut()
+    fun signOutUser() = firebaseAuth.signOut()
 
     fun createCredential(smsCode: String) = PhoneAuthProvider.getCredential(verificationId, smsCode)
 
@@ -94,7 +91,7 @@ class AuthProvider {
     }
 
     fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
-        auth.signInWithCredential(credential)
+        firebaseAuth.signInWithCredential(credential)
             .addOnCompleteListener(TaskExecutors.MAIN_THREAD, OnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val user = task.result?.user

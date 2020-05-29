@@ -1,12 +1,10 @@
 package ua.com.cuteteam.core.activities
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.FirebaseApp
 import ua.com.cuteteam.core.R
 import ua.com.cuteteam.core.fragments.PhoneNumberFragment
 import ua.com.cuteteam.core.fragments.VerificationCodeFragment
@@ -48,7 +46,7 @@ class AuthActivity : AppCompatActivity() {
                 )
                     .addToBackStack(VERIFICATION_CODE_FRAGMENT)
                     .commit()
-                AuthViewModel.State.LOGGED_IN -> returnToStartUpActivity()
+                AuthViewModel.State.LOGGED_IN -> setResult()
                 AuthViewModel.State.RESEND_CODE -> authViewModel.resendVerificationCode()
                 AuthViewModel.State.SERVICE_UNAVAILABLE -> Toast.makeText(
                     this,
@@ -61,9 +59,8 @@ class AuthActivity : AppCompatActivity() {
         })
     }
 
-    private fun returnToStartUpActivity() {
-        val intent = Intent(this, StartActivity::class.java)
-        startActivity(intent)
+    private fun setResult() {
+        setResult(101)
         finish()
     }
 
