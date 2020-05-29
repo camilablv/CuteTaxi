@@ -3,6 +3,7 @@ package ua.com.cuteteam.core.providers
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.TaskExecutors
 import com.google.firebase.FirebaseException
+import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
@@ -16,13 +17,19 @@ interface AuthListener {
     fun onTimeOut()
 }
 
-class AuthProvider {
-    private val phoneAuthProvider = PhoneAuthProvider.getInstance()
-    private val auth = FirebaseAuth.getInstance()
+class AuthProvider(
+    private val phoneAuthProvider: PhoneAuthProvider,
+    private val firebaseAuth: FirebaseAuth) {
+
+    companion object {
+        const val ERROR_INVALID_PHONE_NUMBER = "ERROR_INVALID_PHONE_NUMBER"
+        const val ERROR_INVALID_VERIFICATION_CODE = "ERROR_INVALID_VERIFICATION_CODE"
+        const val ERROR_SERVICE_UNAVAILABLE = "ERROR_SERVICE_UNAVAILABLE"
+    }
+
     private lateinit var verificationId: String
     private lateinit var resendingToken: PhoneAuthProvider.ForceResendingToken
     var authListener: AuthListener? = null
-    private val firebaseAuth = FirebaseAuth.getInstance()
 
     val user get() = firebaseAuth.currentUser
 
@@ -41,7 +48,7 @@ class AuthProvider {
             }
 
             override fun onVerificationFailed(exception: FirebaseException) {
-                authListener?.onFailure((exception as FirebaseAuthInvalidCredentialsException).errorCode)
+                authListener?.onFailure(exceptionToCode(exception))
             }
 
             override fun onCodeAutoRetrievalTimeOut(p0: String) {
@@ -49,8 +56,6 @@ class AuthProvider {
                 authListener?.onTimeOut()
             }
         }
-
-    fun isUserSignedIn() = firebaseAuth.currentUser != null
 
     suspend fun verifyCurrentUser(): Boolean {
         return suspendCoroutine {
@@ -60,7 +65,7 @@ class AuthProvider {
         }
     }
 
-    fun signOutUser() = auth.signOut()
+    fun signOutUser() = firebaseAuth.signOut()
 
     fun createCredential(smsCode: String) = PhoneAuthProvider.getCredential(verificationId, smsCode)
 
@@ -86,16 +91,22 @@ class AuthProvider {
     }
 
     fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
-        auth.signInWithCredential(credential)
+        firebaseAuth.signInWithCredential(credential)
             .addOnCompleteListener(TaskExecutors.MAIN_THREAD, OnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val user = task.result?.user
                     authListener?.onSuccess(user)
                 } else {
-                    if (task.exception is FirebaseAuthInvalidCredentialsException) {
-                        authListener?.onFailure((task.exception as FirebaseAuthInvalidCredentialsException).errorCode)
-                    }
+                    authListener?.onFailure(exceptionToCode(task.exception))
                 }
             })
+    }
+
+    private fun exceptionToCode(exception: Exception?): String {
+        return when(exception) {
+            is FirebaseAuthInvalidCredentialsException -> exception.errorCode
+            is FirebaseTooManyRequestsException -> ERROR_SERVICE_UNAVAILABLE
+            else -> ""
+        }
     }
 }

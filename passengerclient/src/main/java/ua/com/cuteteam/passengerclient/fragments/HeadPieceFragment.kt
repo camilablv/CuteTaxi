@@ -1,4 +1,4 @@
-package ua.com.cuteteam.core.fragments
+package ua.com.cuteteam.passengerclient.fragments
 
 
 import android.os.Bundle
@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import ua.com.cuteteam.core.R
+import ua.com.cuteteam.passengerclient.R
 
 class HeadPieceFragment : Fragment() {
 

@@ -5,18 +5,21 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
 import ua.com.cuteteam.core.providers.AuthListener
 import ua.com.cuteteam.core.providers.AuthProvider
+import ua.com.cuteteam.core.providers.AuthProvider.Companion.ERROR_INVALID_PHONE_NUMBER
+import ua.com.cuteteam.core.providers.AuthProvider.Companion.ERROR_INVALID_VERIFICATION_CODE
+import ua.com.cuteteam.core.providers.AuthProvider.Companion.ERROR_SERVICE_UNAVAILABLE
 
-class AuthViewModel: ViewModel(),
+class AuthViewModel(private val authProvider: AuthProvider): ViewModel(),
     AuthListener {
 
-    companion object {
-        private const val ERROR_INVALID_PHONE_NUMBER = "ERROR_INVALID_PHONE_NUMBER"
-        private const val ERROR_INVALID_VERIFICATION_CODE = "ERROR_INVALID_VERIFICATION_CODE"
+    init {
+        authProvider.apply { authListener = this@AuthViewModel }
     }
 
     enum class State {
         ENTERING_PHONE_NUMBER,
         INVALID_PHONE_NUMBER,
+        SERVICE_UNAVAILABLE,
         ENTERING_VERIFICATION_CODE,
         LOGGED_IN,
         RESEND_CODE,
@@ -25,9 +28,6 @@ class AuthViewModel: ViewModel(),
     }
 
     var state = MutableLiveData(State.ENTERING_PHONE_NUMBER)
-
-    private val authProvider = AuthProvider()
-        .apply { authListener = this@AuthViewModel }
 
     private var _firebaseUser: FirebaseUser? = null
     val firebaseUser get() = authProvider.user ?: _firebaseUser
@@ -74,6 +74,7 @@ class AuthViewModel: ViewModel(),
         when(errorCode) {
             ERROR_INVALID_PHONE_NUMBER -> state.value = State.INVALID_PHONE_NUMBER
             ERROR_INVALID_VERIFICATION_CODE -> state.value = State.INVALID_CODE
+            ERROR_SERVICE_UNAVAILABLE -> state.value = State.SERVICE_UNAVAILABLE
         }
     }
 

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.HeadPieceFragment">
+    tools:context="ua.com.cuteteam.driverclient.fragments.HeadPieceFragment">
 
     <ImageView
         android:src="@drawable/cute_taxi_headpiece"
