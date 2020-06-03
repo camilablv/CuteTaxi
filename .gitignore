@@ -88,3 +88,4 @@ lint/tmp/
 CuteTaxi/local.properties
 api_keys.xml
 google-services.json
+Constants.kt
