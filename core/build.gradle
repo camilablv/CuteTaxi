@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply from: '../secrets.gradle'
 
 android {
     compileSdkVersion 29
@@ -22,6 +23,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+
+    buildTypes.each {
+        it.buildConfigField('String', 'GoogleAPIKey', "\"${GOOGLE_API_KEY}\"")
+        it.resValue('string', 'google_maps_key', "\"${MAPS_API_KEY}\"")
     }
 
     compileOptions {

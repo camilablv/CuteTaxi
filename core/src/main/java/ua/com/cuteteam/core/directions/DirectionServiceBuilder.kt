@@ -6,9 +6,12 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import ua.com.cuteteam.core.directions.interceptors.DirectionInterceptor
-import ua.com.cuteteam.core.utils.Constants
 
 class DirectionServiceBuilder {
+
+    companion object {
+        const val BASE_URL = "https://maps.googleapis.com/maps/api/directions/"
+    }
 
     private val moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
@@ -19,8 +22,10 @@ class DirectionServiceBuilder {
         .build()
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl(Constants.BASE_URL)
+        .baseUrl(BASE_URL)
         .client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
+
+    fun build(): DirectionService = retrofit.create(DirectionService::class.java)
 }
