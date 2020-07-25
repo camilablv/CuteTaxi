@@ -16,6 +16,7 @@ class DirectionRequest(private val directionService: DirectionService = Directio
             "waypoints" to wayPoints.map(::latLngToString).joinToString("|")
         ).filterNot { it.value.isEmpty() }
 
-        fun latLngToString(latLng: LatLng) = "${latLng.latitude},${latLng.longitude}"
+        private fun latLngToString(latLng: LatLng) = "${latLng.latitude},${latLng.longitude}"
     }
 }
+
