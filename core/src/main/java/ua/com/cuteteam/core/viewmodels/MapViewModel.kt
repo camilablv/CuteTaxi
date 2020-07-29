@@ -12,7 +12,7 @@ import ua.com.cuteteam.core.extentions.mutation
 import ua.com.cuteteam.core.livedata.MapAction
 import ua.com.cuteteam.core.livedata.SingleLiveEvent
 import ua.com.cuteteam.core.providers.LocationProvider
-import ua.com.cuteteam.core.providers.RouteProvider
+import ua.com.cuteteam.core.providers.DirectionsProvider
 import ua.com.cuteteam.core.repositories.MapRepository
 
 abstract class MapViewModel(private val repository: MapRepository) : ViewModel() {
@@ -21,7 +21,7 @@ abstract class MapViewModel(private val repository: MapRepository) : ViewModel()
 
     var polylineOptions: PolylineOptions? = null
 
-    var currentRoute = MutableLiveData<RouteProvider.RouteSummary>()
+    var currentRoute = MutableLiveData<DirectionsProvider.RouteSummary>()
 
     val mapAction = SingleLiveEvent<MapAction>()
 
@@ -43,7 +43,7 @@ abstract class MapViewModel(private val repository: MapRepository) : ViewModel()
     val locationProvider: LocationProvider
         get() = repository.locationProvider
 
-    fun setCurrentRoute(routeSummary: RouteProvider.RouteSummary) {
+    fun setCurrentRoute(routeSummary: DirectionsProvider.RouteSummary) {
         currentRoute.value = routeSummary
     }
 

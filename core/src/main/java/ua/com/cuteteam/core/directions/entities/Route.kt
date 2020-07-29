@@ -7,4 +7,6 @@ data class Route(
     val legs: List<Leg>,
     @Json(name = "overview_polyline")
     val polyline: Polyline
-)
+) {
+
+}
