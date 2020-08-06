@@ -8,22 +8,28 @@ import android.view.animation.LinearInterpolator
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import ua.com.cuteteam.core.R
 import ua.com.cuteteam.core.application.AppClass
 import ua.com.cuteteam.core.data.MarkerData
-import ua.com.cuteteam.core.providers.RouteProvider
+import ua.com.cuteteam.core.directions.entities.Directions
+import ua.com.cuteteam.core.directions.entities.Route
+import ua.com.cuteteam.core.providers.DirectionsProvider
+import ua.com.cuteteam.core.utils.Utils
 
 
-class GoogleMapsHelper(private val googleMap: GoogleMap) {
+class GoogleMapsHelper(
+    private val googleMap: GoogleMap,
+    private val directionsProvider: DirectionsProvider = DirectionsProvider()
+) {
 
     init {
         googleMap.isMyLocationEnabled = true
         googleMap.isBuildingsEnabled = false
     }
 
-    private var currentRoute: RouteProvider.RouteSummary? = null
+
+
+    private var currentRoute: Route? = null
 
     fun updateMarkers(markers: MutableCollection<MarkerData>?) {
         googleMap.clear()
@@ -42,8 +48,11 @@ class GoogleMapsHelper(private val googleMap: GoogleMap) {
         return googleMap.addMarker(
             MarkerOptions()
                 .position(markerData.position)
-                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(markerData.icon, 150, 150)))
-
+                .icon(
+                    BitmapDescriptorFactory.fromBitmap(
+                        Utils().resizeMapIcons(markerData.icon, 150, 150)
+                    )
+                )
         )
     }
 
@@ -57,23 +66,19 @@ class GoogleMapsHelper(private val googleMap: GoogleMap) {
         }
     }
 
-    suspend fun routeSummary(
-        from: LatLng,
-        to: LatLng,
-        wayPoints: List<LatLng>
-    ): RouteProvider.RouteSummary {
-        val routeProvider = buildRouteProvider(from, to, wayPoints)
-        return withContext(Dispatchers.Main) { return@withContext routeProvider.routes()[0] }
+    suspend fun buildRoute(from: LatLng, to: LatLng, wayPoints: List<LatLng>): Array<LatLng> {
+        return RouteHelper(directionsProvider.directions(from, to, wayPoints)).polylinePoints()
     }
 
-    fun buildRoute(routeSummary: RouteProvider.RouteSummary): PolylineOptions? {
+
+    fun createPolyline(polyline: Array<LatLng>): PolylineOptions? {
         val customCap = CustomCap(
             BitmapDescriptorFactory.fromResource(R.drawable.circular_shape_silhouette),
             300f
         )
         val polylineOptions = PolylineOptions()
             .clickable(true)
-            .add(*routeSummary.polyline)
+            .add(*polyline)
             .color(Color.parseColor("#0288d1"))
             .width(15f)
             .startCap(customCap)
@@ -91,8 +96,8 @@ class GoogleMapsHelper(private val googleMap: GoogleMap) {
         googleMap.setOnMapClickListener(null)
     }
 
-    fun updateCameraForCurrentRoute(routeSummary: RouteProvider.RouteSummary?) {
-        routeSummary?.let {
+    fun updateCameraForCurrentRoute(polyline: Array<LatLng>) {
+        polyline?.let {
             googleMap.animateCamera(
                 CameraUpdateFactory.newLatLngBounds(
                     buildBoundaryForRoute(it),
@@ -102,31 +107,13 @@ class GoogleMapsHelper(private val googleMap: GoogleMap) {
         }
     }
 
-    private fun buildBoundaryForRoute(routeSummary: RouteProvider.RouteSummary): LatLngBounds {
+    private fun buildBoundaryForRoute(polyline: Array<LatLng>): LatLngBounds {
         return LatLngBounds.Builder()
-            .include(routeSummary.polyline.minBy { it.longitude })
-            .include(routeSummary.polyline.minBy { it.latitude })
-            .include(routeSummary.polyline.maxBy { it.latitude })
-            .include(routeSummary.polyline.maxBy { it.longitude })
+            .include(polyline.minBy { it.longitude })
+            .include(polyline.minBy { it.latitude })
+            .include(polyline.maxBy { it.latitude })
+            .include(polyline.maxBy { it.longitude })
             .build()
-    }
-
-    private fun buildRouteProvider(from: LatLng, to: LatLng, wayPoints: List<LatLng>)
-            : RouteProvider {
-        val routeProviderBuilder = RouteProvider.Builder()
-        wayPoints.forEach {
-            routeProviderBuilder.addWayPoint(it)
-        }
-        return routeProviderBuilder
-            .addOrigin(from)
-            .addDestination(to)
-            .build()
-    }
-
-    private fun resizeMapIcons(iconId: Int, width: Int, height: Int): Bitmap? {
-        val b = BitmapFactory.decodeResource(AppClass.appContext().resources, iconId)
-        return Bitmap.createScaledBitmap(b, width, height, false)
-
     }
 
     fun animateCarOnMap(bearing: Float, markerData: MarkerData, from: LatLng, to: LatLng) {
@@ -138,11 +125,12 @@ class GoogleMapsHelper(private val googleMap: GoogleMap) {
         val valueAnimator = ValueAnimator.ofFloat(0f, 1f)
         valueAnimator.duration = 1000
         valueAnimator.interpolator = LinearInterpolator()
-        valueAnimator.addUpdateListener ( object : ValueAnimator.AnimatorUpdateListener {
+        valueAnimator.addUpdateListener(object : ValueAnimator.AnimatorUpdateListener {
             override fun onAnimationUpdate(animation: ValueAnimator?) {
                 val animatedFraction = valueAnimator.animatedFraction
                 val lat = (animatedFraction * to.latitude) + (1 - animatedFraction) * from.latitude
-                val lng = (animatedFraction * to.longitude) + (1 - animatedFraction) * from.longitude
+                val lng =
+                    (animatedFraction * to.longitude) + (1 - animatedFraction) * from.longitude
 
                 val newPosition = LatLng(lat, lng)
 

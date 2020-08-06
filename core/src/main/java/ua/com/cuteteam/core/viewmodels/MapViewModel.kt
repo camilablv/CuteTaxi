@@ -7,6 +7,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.PolylineOptions
 import ua.com.cuteteam.core.data.MarkerData
+import ua.com.cuteteam.core.directions.entities.Route
 import ua.com.cuteteam.core.extentions.findBy
 import ua.com.cuteteam.core.extentions.mutation
 import ua.com.cuteteam.core.livedata.MapAction
@@ -21,7 +22,7 @@ abstract class MapViewModel(private val repository: MapRepository) : ViewModel()
 
     var polylineOptions: PolylineOptions? = null
 
-    var currentRoute = MutableLiveData<DirectionsProvider.RouteSummary>()
+    var currentRoute = MutableLiveData<Route>()
 
     val mapAction = SingleLiveEvent<MapAction>()
 
@@ -43,8 +44,8 @@ abstract class MapViewModel(private val repository: MapRepository) : ViewModel()
     val locationProvider: LocationProvider
         get() = repository.locationProvider
 
-    fun setCurrentRoute(routeSummary: DirectionsProvider.RouteSummary) {
-        currentRoute.value = routeSummary
+    fun setCurrentRoute(route: Route) {
+        currentRoute.value = route
     }
 
     fun setMarkers(pair: Pair<String, Marker?>) {

@@ -10,12 +10,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ua.com.cuteteam.core.activities.AuthActivity
+import ua.com.cuteteam.core.fragments.MapsFragment
 import ua.com.cuteteam.core.viewmodels.AuthViewModel
 import ua.com.cuteteam.core.viewmodels.StartUpViewModel
 import ua.com.cuteteam.core.viewmodels.viewmodelfactories.AuthViewModelFactory
 import ua.com.cuteteam.core.viewmodels.viewmodelfactories.StartUpViewModelFactory
 import ua.com.cuteteam.passengerclient.R
 import ua.com.cuteteam.passengerclient.fragments.HeadPieceFragment
+import ua.com.cuteteam.passengerclient.fragments.PassengerMapsFragment
 import java.util.*
 
 class StartActivity : AppCompatActivity() {
@@ -75,7 +77,7 @@ class StartActivity : AppCompatActivity() {
         startUpViewModel.updateOrCreateUser(firebaseUser)
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.head_piece_fl, SupportMapFragment())
+            .replace(R.id.head_piece_fl, PassengerMapsFragment())
             .commit()
     }
 

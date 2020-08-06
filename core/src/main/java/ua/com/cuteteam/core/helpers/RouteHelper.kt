@@ -9,4 +9,7 @@ class RouteHelper(val directions: Directions) {
         return directions.routes[0].polyline.toLatLngList().toTypedArray()
     }
 
+    fun routeSummary() {
+        directions.routes[0].summary
+    }
 }

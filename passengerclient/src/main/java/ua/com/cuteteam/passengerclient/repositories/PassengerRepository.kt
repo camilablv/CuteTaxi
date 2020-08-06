@@ -1,4 +1,6 @@
 package ua.com.cuteteam.passengerclient.repositories
 
-class PassengerRepository {
+import ua.com.cuteteam.core.repositories.MapRepository
+
+class PassengerRepository() : MapRepository() {
 }

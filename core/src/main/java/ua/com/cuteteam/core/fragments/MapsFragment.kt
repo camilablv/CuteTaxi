@@ -15,6 +15,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import ua.com.cuteteam.core.R
 import ua.com.cuteteam.core.dialogs.InfoDialog
+import ua.com.cuteteam.core.extentions.toLatLng
 import ua.com.cuteteam.core.viewmodels.MapViewModel
 
 
@@ -114,7 +115,7 @@ abstract class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
                     is MapAction.UpdateCameraForRoute -> {
                         viewModel.currentRoute.observe(this, Observer {
                             if (it != null)
-                                googleMapsHelper.updateCameraForCurrentRoute(it)
+                                googleMapsHelper.updateCameraForCurrentRoute(it.polyline.toLatLngList().toTypedArray())
                         })
                     }
                     is MapAction.ShowCar -> {
@@ -131,7 +132,7 @@ abstract class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
             GlobalScope.launch(Dispatchers.Main) {
                 if (viewModel.cameraPosition == null)
                     googleMapsHelper.moveCameraToLocation(
-                        viewModel.locationProvider.getLocation()?.toLatLng ?: return@launch
+                        viewModel.locationProvider.getLocation()?.toLatLng() ?: return@launch
                     )
             }
 
@@ -145,21 +146,13 @@ abstract class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
         googleMapsHelper: GoogleMapsHelper,
         mapAction: MapAction.BuildRoute
     ) {
-        viewModel.setCurrentRoute(
-            suspendCoroutine {
-                GlobalScope.launch(Dispatchers.Main) {
-                    it.resume(
-                        googleMapsHelper.routeSummary(
-                            mapAction.from,
-                            mapAction.to,
-                            mapAction.wayPoints
-                        ).also {
-                            viewModel.polylineOptions = googleMapsHelper.buildRoute(it)
-                        }
-                    )
-                }
-            }
+        val polylinePoints = googleMapsHelper.buildRoute(
+            mapAction.from,
+            mapAction.to,
+            mapAction.wayPoints
         )
+
+        viewModel.polylineOptions = googleMapsHelper.createPolyline(polylinePoints)
     }
 
     abstract fun initMap(googleMapsHelper: GoogleMapsHelper)
