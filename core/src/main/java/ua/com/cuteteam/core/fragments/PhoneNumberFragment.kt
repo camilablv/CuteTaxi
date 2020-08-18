@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_phone_number.*
 import ua.com.cuteteam.core.R
 import ua.com.cuteteam.core.viewmodels.AuthViewModel
+import javax.inject.Inject
 
 
 class PhoneNumberFragment : Fragment(), View.OnClickListener {

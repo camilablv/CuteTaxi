@@ -8,9 +8,9 @@ import ua.com.cuteteam.core.providers.AuthProvider
 import ua.com.cuteteam.core.providers.AuthProvider.Companion.ERROR_INVALID_PHONE_NUMBER
 import ua.com.cuteteam.core.providers.AuthProvider.Companion.ERROR_INVALID_VERIFICATION_CODE
 import ua.com.cuteteam.core.providers.AuthProvider.Companion.ERROR_SERVICE_UNAVAILABLE
+import javax.inject.Inject
 
-class AuthViewModel(private val authProvider: AuthProvider): ViewModel(),
-    AuthListener {
+class AuthViewModel @Inject constructor(private val authProvider: AuthProvider) : ViewModel(), AuthListener {
 
     init {
         authProvider.apply { authListener = this@AuthViewModel }
@@ -71,7 +71,7 @@ class AuthViewModel(private val authProvider: AuthProvider): ViewModel(),
     }
 
     override fun onFailure(errorCode: String) {
-        when(errorCode) {
+        when (errorCode) {
             ERROR_INVALID_PHONE_NUMBER -> state.value = State.INVALID_PHONE_NUMBER
             ERROR_INVALID_VERIFICATION_CODE -> state.value = State.INVALID_CODE
             ERROR_SERVICE_UNAVAILABLE -> state.value = State.SERVICE_UNAVAILABLE

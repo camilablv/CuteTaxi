@@ -10,13 +10,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ua.com.cuteteam.core.activities.AuthActivity
+import ua.com.cuteteam.core.fragments.MapsFragment
+import ua.com.cuteteam.core.repositories.MapRepository
 import ua.com.cuteteam.core.viewmodels.AuthViewModel
+import ua.com.cuteteam.core.viewmodels.MapViewModel
 import ua.com.cuteteam.core.viewmodels.StartUpViewModel
 import ua.com.cuteteam.core.viewmodels.viewmodelfactories.AuthViewModelFactory
 import ua.com.cuteteam.core.viewmodels.viewmodelfactories.StartUpViewModelFactory
 import ua.com.cuteteam.passengerclient.R
 import ua.com.cuteteam.passengerclient.fragments.HeadPieceFragment
+import ua.com.cuteteam.passengerclient.fragments.PassengerMapsFragment
 import java.util.*
+import javax.inject.Inject
 
 class StartActivity : AppCompatActivity() {
 
@@ -24,6 +29,9 @@ class StartActivity : AppCompatActivity() {
         private const val REQUEST_CODE = 100
         private const val RESULT_CODE = 101
     }
+
+    @Inject
+    lateinit var mapsFragment: PassengerMapsFragment
 
     private val authViewModel by lazy {
         ViewModelProvider(this, AuthViewModelFactory())
@@ -75,7 +83,7 @@ class StartActivity : AppCompatActivity() {
         startUpViewModel.updateOrCreateUser(firebaseUser)
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.head_piece_fl, SupportMapFragment())
+            .replace(R.id.head_piece_fl, mapsFragment)
             .commit()
     }
 
