@@ -2,8 +2,9 @@ package ua.com.cuteteam.core.directions
 
 import com.google.android.gms.maps.model.LatLng
 import ua.com.cuteteam.core.directions.entities.Directions
+import javax.inject.Inject
 
-class DirectionRequest(private val directionService: DirectionService = DirectionServiceBuilder().build()) {
+class DirectionRequest @Inject constructor(private val directionService: DirectionService) {
 
     suspend fun send(query: Query): Directions {
         return directionService.directions(query.toMap())

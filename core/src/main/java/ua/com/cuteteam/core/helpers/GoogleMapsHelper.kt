@@ -1,7 +1,5 @@
 package ua.com.cuteteam.core.helpers
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.animation.ValueAnimator
 import android.graphics.Color
 import android.view.animation.LinearInterpolator
@@ -9,27 +7,27 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
 import ua.com.cuteteam.core.R
-import ua.com.cuteteam.core.application.AppClass
 import ua.com.cuteteam.core.data.MarkerData
-import ua.com.cuteteam.core.directions.entities.Directions
 import ua.com.cuteteam.core.directions.entities.Route
 import ua.com.cuteteam.core.providers.DirectionsProvider
-import ua.com.cuteteam.core.utils.Utils
+import ua.com.cuteteam.core.utils.MapsUtils
+import javax.inject.Inject
 
 
-class GoogleMapsHelper(
-    private val googleMap: GoogleMap,
-    private val directionsProvider: DirectionsProvider = DirectionsProvider()
+class GoogleMapsHelper @Inject constructor(
+    private val directionsProvider: DirectionsProvider,
+    private val utils: MapsUtils
 ) {
 
-    init {
+    private lateinit var googleMap: GoogleMap
+
+    private var currentRoute: Route? = null
+
+    fun initMap(map: GoogleMap) {
+        googleMap = map
         googleMap.isMyLocationEnabled = true
         googleMap.isBuildingsEnabled = false
     }
-
-
-
-    private var currentRoute: Route? = null
 
     fun updateMarkers(markers: MutableCollection<MarkerData>?) {
         googleMap.clear()
@@ -50,7 +48,7 @@ class GoogleMapsHelper(
                 .position(markerData.position)
                 .icon(
                     BitmapDescriptorFactory.fromBitmap(
-                        Utils().resizeMapIcons(markerData.icon, 150, 150)
+                        utils.resizeMapIcons(markerData.icon, 150, 150)
                     )
                 )
         )

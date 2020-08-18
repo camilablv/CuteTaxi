@@ -1,15 +1,14 @@
 package ua.com.cuteteam.passengerclient.di
 
-import android.app.Application
-import android.content.Context
-import dagger.Component
-import dagger.BindsInstance
 
-@Component
+import dagger.Component
+import ua.com.cuteteam.core.activities.AuthActivity
+import ua.com.cuteteam.core.activities.AuthModule
+import ua.com.cuteteam.core.di.CoreModule
+import ua.com.cuteteam.core.di.ViewModelModule
+
+@Component(modules = [AuthModule::class , CoreModule::class, ViewModelModule::class])
 interface ApplicationComponent {
 
-    @Component.Factory
-    interface Factory {
-        fun create(@BindsInstance context: Context): ApplicationComponent
-    }
+    fun inject(activity: AuthActivity)
 }

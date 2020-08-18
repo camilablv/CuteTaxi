@@ -10,6 +10,7 @@ import ua.com.cuteteam.core.fragments.PhoneNumberFragment
 import ua.com.cuteteam.core.fragments.VerificationCodeFragment
 import ua.com.cuteteam.core.viewmodels.AuthViewModel
 import ua.com.cuteteam.core.viewmodels.viewmodelfactories.AuthViewModelFactory
+import javax.inject.Inject
 
 
 class AuthActivity : AppCompatActivity() {
@@ -19,12 +20,12 @@ class AuthActivity : AppCompatActivity() {
         private const val PHONE_NUMBER_FRAGMENT = "PHONE_NUMBER_FRAGMENT"
     }
 
-    private val authViewModel by lazy {
-        ViewModelProvider(this, AuthViewModelFactory())
-            .get(AuthViewModel::class.java)
-    }
+    @Inject
+    lateinit var authViewModel: AuthViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
 

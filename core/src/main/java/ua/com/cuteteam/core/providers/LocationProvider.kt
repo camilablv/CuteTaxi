@@ -8,11 +8,11 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.tasks.Task
-import ua.com.cuteteam.core.application.AppClass
+import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class LocationProvider(private val context: Context = AppClass.appContext()) {
+class LocationProvider @Inject constructor(private val context: Context) {
 
     private val locationRequest = LocationRequest.create().apply {
         interval = 10000

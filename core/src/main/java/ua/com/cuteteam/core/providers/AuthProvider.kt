@@ -6,6 +6,7 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -17,7 +18,7 @@ interface AuthListener {
     fun onTimeOut()
 }
 
-class AuthProvider(
+class AuthProvider @Inject constructor(
     private val phoneAuthProvider: PhoneAuthProvider,
     private val firebaseAuth: FirebaseAuth) {
 

@@ -15,8 +15,9 @@ import ua.com.cuteteam.core.livedata.SingleLiveEvent
 import ua.com.cuteteam.core.providers.LocationProvider
 import ua.com.cuteteam.core.providers.DirectionsProvider
 import ua.com.cuteteam.core.repositories.MapRepository
+import javax.inject.Inject
 
-abstract class MapViewModel(private val repository: MapRepository) : ViewModel() {
+class MapViewModel @Inject constructor(private val repository: MapRepository) : ViewModel() {
 
     var cameraPosition: CameraPosition? = null
 

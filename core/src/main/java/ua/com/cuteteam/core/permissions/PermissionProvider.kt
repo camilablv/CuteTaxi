@@ -4,22 +4,13 @@ import android.app.Activity
 import pub.devrel.easypermissions.EasyPermissions
 import android.util.Log
 import androidx.fragment.app.Fragment
+import javax.inject.Inject
 
-class PermissionProvider :
-    EasyPermissions.PermissionCallbacks {
-
-    private val host: Any
-    private val activity: Activity
-
-    constructor(activity: Activity) {
-        host = activity
-        this.activity = activity
-    }
-
-    constructor(fragment: Fragment) {
-        host = fragment
-        activity = fragment.activity!!
-    }
+class PermissionProvider @Inject constructor(
+    private val accessFineLocationPermission: AccessFineLocationPermission,
+    private val callPhonePermission: CallPhonePermission
+) : EasyPermissions.PermissionCallbacks {
+    lateinit var permissionProviderHost: PermissionProviderHost
 
     companion object {
         const val LOCATION_REQUEST_CODE = 101
@@ -27,44 +18,27 @@ class PermissionProvider :
     }
 
     var onGranted: (() -> Unit)? = null
-    var onDenied: ((permission: Permission,isPermanentlyDenied: Boolean) -> Unit)? = null
+    var onDenied: ((permission: Permission, isPermanentlyDenied: Boolean) -> Unit)? = null
 
     fun withPermission(permission: Permission, callback: () -> Unit) {
 
-        if (EasyPermissions.hasPermissions(activity, permission.name)) {
+        if (permissionProviderHost.hasPermission(permission)) {
             callback()
         } else {
-            if (host is Activity) requestPermission(permission, host)
-            else if (host is Fragment) requestPermission(permission, host)
+            permissionProviderHost.requestPermission(permission)
         }
-    }
-
-    private fun requestPermission(permission: Permission, host: Activity) {
-        EasyPermissions.requestPermissions(
-            host,
-            permission.rationale,
-            permission.requestCode,
-            permission.name
-        )
-    }
-
-    private fun requestPermission(permission: Permission, host: Fragment) {
-        EasyPermissions.requestPermissions(
-            host,
-            permission.rationale,
-            permission.requestCode,
-            permission.name
-        )
     }
 
     override fun onPermissionsDenied(requestCode: Int, permissions: MutableList<String>) {
         Log.d(PermissionProvider::class.java.name, "onPermissionsDenied")
         when (requestCode) {
-            LOCATION_REQUEST_CODE -> onDenied?.invoke( AccessFineLocationPermission(),
-                isPermissionPermanentlyDenied(AccessFineLocationPermission())
+            LOCATION_REQUEST_CODE -> onDenied?.invoke(
+                accessFineLocationPermission,
+                isPermissionPermanentlyDenied(accessFineLocationPermission)
             )
-            CALL_PHONE_REQUEST_CODE -> onDenied?.invoke( CallPhonePermission(),
-                isPermissionPermanentlyDenied(CallPhonePermission())
+            CALL_PHONE_REQUEST_CODE -> onDenied?.invoke(
+                callPhonePermission,
+                isPermissionPermanentlyDenied(callPhonePermission)
             )
         }
     }
@@ -82,12 +56,15 @@ class PermissionProvider :
             requestCode,
             permissions,
             grantResults,
-            host,
+            permissionProviderHost.fragmentOrActivity,
             this
         )
     }
 
     private fun isPermissionPermanentlyDenied(permission: Permission): Boolean {
-        return EasyPermissions.permissionPermanentlyDenied(activity, permission.name)
+        return EasyPermissions.permissionPermanentlyDenied(
+            permissionProviderHost.activity,
+            permission.name
+        )
     }
 }

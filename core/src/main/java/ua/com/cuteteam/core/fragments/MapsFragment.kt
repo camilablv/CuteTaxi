@@ -11,12 +11,14 @@ import ua.com.cuteteam.core.helpers.GoogleMapsHelper
 import ua.com.cuteteam.core.livedata.MapAction
 import ua.com.cuteteam.core.permissions.AccessFineLocationPermission
 import ua.com.cuteteam.core.permissions.PermissionProvider
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import ua.com.cuteteam.core.R
 import ua.com.cuteteam.core.dialogs.InfoDialog
+import ua.com.cuteteam.core.extentions.injectViewModel
 import ua.com.cuteteam.core.extentions.toLatLng
+import ua.com.cuteteam.core.permissions.PermissionProviderHostFragment
 import ua.com.cuteteam.core.viewmodels.MapViewModel
+import ua.com.cuteteam.core.viewmodels.viewmodelfactories.MapViewModelFactory
+import javax.inject.Inject
 
 
 abstract class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
@@ -25,16 +27,30 @@ abstract class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
         private var shouldShowPermissionPermanentlyDeniedDialog = true
     }
 
-    abstract val viewModel: MapViewModel
+    @Inject
+    lateinit var accessFineLocationPermission: AccessFineLocationPermission
 
-    var permissionProvider: PermissionProvider? = null
+    @Inject
+    lateinit var googleMapsHelper: GoogleMapsHelper
+
+    @Inject
+    lateinit var mapViewModelFactory: MapViewModelFactory
+
+    abstract var viewModel: MapViewModel
+
+    @Inject
+    lateinit var permissionProvider: PermissionProvider
 
     private lateinit var mMap: GoogleMap
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        permissionProvider = PermissionProvider(this).apply {
+        viewModel = injectViewModel(mapViewModelFactory)
+
+        permissionProvider.apply {
+            permissionProviderHost = PermissionProviderHostFragment(this@MapsFragment)
+
             onDenied = { permission, isPermanentlyDenied ->
                 if (isPermanentlyDenied && shouldShowPermissionPermanentlyDeniedDialog) {
                     InfoDialog.show(
@@ -73,8 +89,8 @@ abstract class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
     private suspend fun initMapData() {
         ::mMap.isInitialized || return
 
-        permissionProvider?.withPermission(AccessFineLocationPermission()) {
-            val googleMapsHelper = GoogleMapsHelper(mMap)
+        permissionProvider?.withPermission(accessFineLocationPermission) {
+            googleMapsHelper.initMap(mMap)
 
             initMap(googleMapsHelper)
 
